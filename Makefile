@@ -1,4 +1,4 @@
-CUDA_INSTALL_PATH = /usr/local/cuda
+CUDA_INSTALL_PATH = ${CUDA_HOME}
 #OCL_INSTALL_PATH = /opt/AMDAPPSDK
 #OCL_INSTALL_PATH = /opt/rocm/opencl
 OCL_INSTALL_PATH = ${CUDA_INSTALL_PATH}
@@ -20,7 +20,8 @@ ifeq ($(OS),Darwin)
 else
     LFLAGS_OCL = -L${OCL_LIB_PATH} -lm -lstdc++ -lOpenCL -lrt
 endif
-NVCODE = -gencode=arch=compute_60,code=\"compute_60\" -gencode=arch=compute_30,code=\"compute_30\"
+#NVCODE = -gencode=arch=compute_60,code=\"compute_60\" -gencode=arch=compute_30,code=\"compute_30\"
+NVCODE = -arch=compute_70 -code=sm_70
 
 ifdef HIP_PATH
     HIPCC=$(HIP_PATH)/bin/hipcc
@@ -42,7 +43,7 @@ ifdef CUDA_INSTALL_PATH
         all: mixbench-hip-alt mixbench-hip-ro mixbench-cuda-alt mixbench-cuda-ro mixbench-ocl-alt mixbench-ocl-ro
     else
         # build both cuda and opencl executables
-        all: mixbench-cuda-alt mixbench-cuda-ro mixbench-ocl-alt mixbench-ocl-ro
+        all: mixbench-cuda-alt mixbench-cuda-ro #mixbench-ocl-alt mixbench-ocl-ro
     endif
 else
     ifdef HIP_PLATFORM
